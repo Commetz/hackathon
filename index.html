@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Unioeste</title>
+
+  <style>
+    :root {
+      --roxo-escuro: #2d1b4e;
+      --roxo: #5b3f8c;
+      --lilas: #8d78b8;
+      --vinho: #b5426b;
+      --fundo: #f5f2fa;
+      --branco: #ffffff;
+      --texto: #1f1f2e;
+      --cinza: #6b6475;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(181, 66, 107, 0.18), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(91, 63, 140, 0.22), transparent 35%),
+        var(--fundo);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    @keyframes aparecerContainer {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes entrarEsquerda {
+      from {
+        opacity: 0;
+        transform: translateX(-36px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes entrarDireita {
+      from {
+        opacity: 0;
+        transform: translateX(36px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes subirSuave {
+      from {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes abrirModal {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 1050px;
+      min-height: 620px;
+      background: var(--branco);
+      border-radius: 28px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      box-shadow: 0 24px 60px rgba(45, 27, 78, 0.22);
+      animation: aparecerContainer 0.7s ease-out both;
+    }
+
+    .login-area {
+      padding: 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: entrarEsquerda 0.75s ease-out both;
+      animation-delay: 0.15s;
+    }
+
+    .logo {
+      margin-bottom: 42px;
+      opacity: 0;
+      animation: subirSuave 0.55s ease-out both;
+      animation-delay: 0.25s;
+    }
+
+    .logo img {
+      max-width: 260px;
+      width: 100%;
+    }
+
+    .login-area h1 {
+      color: var(--roxo-escuro);
+      font-size: 36px;
+      margin-bottom: 10px;
+      opacity: 0;
+      animation: subirSuave 0.55s ease-out both;
+      animation-delay: 0.35s;
+    }
+
+    .login-area .descricao {
+      color: var(--cinza);
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 34px;
+      max-width: 430px;
+      opacity: 0;
+      animation: subirSuave 0.55s ease-out both;
+      animation-delay: 0.45s;
+    }
+
+    form {
+      opacity: 0;
+      animation: subirSuave 0.6s ease-out both;
+      animation-delay: 0.55s;
+    }
+
+    .campo {
+      margin-bottom: 20px;
+    }
+
+    .campo label {
+      display: block;
+      color: var(--roxo-escuro);
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .campo input {
+      width: 100%;
+      padding: 15px 16px;
+      border: 1px solid #d8cfea;
+      border-radius: 14px;
+      font-size: 15px;
+      outline: none;
+      background: #fbfaff;
+      color: var(--texto);
+      transition: 0.2s;
+    }
+
+    .campo input:focus {
+      border-color: var(--roxo);
+      box-shadow: 0 0 0 3px rgba(91, 63, 140, 0.15);
+      background: white;
+    }
+
+    .opcoes-login {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 4px 0 26px;
+      font-size: 14px;
+      color: var(--cinza);
+    }
+
+    .opcoes-login label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .opcoes-login a {
+      color: var(--roxo);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .opcoes-login a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo));
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 12px 24px rgba(91, 63, 140, 0.28);
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(91, 63, 140, 0.34);
+    }
+
+    .cadastro {
+      margin-top: 28px;
+      text-align: center;
+      color: var(--cinza);
+      font-size: 14px;
+      opacity: 0;
+      animation: subirSuave 0.55s ease-out both;
+      animation-delay: 0.7s;
+    }
+
+    .cadastro a {
+      color: var(--vinho);
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .cadastro a:hover {
+      text-decoration: underline;
+    }
+
+    .visual-area {
+      background:
+        linear-gradient(150deg, rgba(45, 27, 78, 0.96), rgba(91, 63, 140, 0.92)),
+        radial-gradient(circle at top, rgba(181, 66, 107, 0.6), transparent 40%);
+      color: white;
+      padding: 54px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      animation: entrarDireita 0.8s ease-out both;
+      animation-delay: 0.2s;
+    }
+
+    .visual-area::before {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: var(--vinho);
+      top: -80px;
+      right: -70px;
+      opacity: 0.45;
+    }
+
+    .visual-area::after {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      bottom: -160px;
+      left: -120px;
+    }
+
+    .visual-conteudo {
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      animation: subirSuave 0.65s ease-out both;
+      animation-delay: 0.45s;
+    }
+
+    .visual-area h2 {
+      font-size: 34px;
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+
+    .visual-area p {
+      color: #e8ddff;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .cards {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 20px;
+      padding: 18px;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      animation: subirSuave 0.55s ease-out both;
+    }
+
+    .card:nth-child(1) {
+      animation-delay: 0.55s;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 0.68s;
+    }
+
+    .card:nth-child(3) {
+      animation-delay: 0.81s;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: white;
+    }
+
+    .card span {
+      color: #ddd2f4;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .modal-fundo {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 10, 35, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .modal {
+      background: white;
+      width: 100%;
+      max-width: 460px;
+      border-radius: 22px;
+      padding: 32px;
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.25);
+      animation: abrirModal 0.35s ease-out both;
+    }
+
+    .modal h2 {
+      color: var(--roxo-escuro);
+      margin-bottom: 8px;
+    }
+
+    .modal p {
+      color: var(--cinza);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .modal-botoes {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .modal-botoes button {
+      flex: 1;
+    }
+
+    .btn-cancelar {
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid #d8cfea;
+      background: white;
+      color: var(--roxo-escuro);
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-cancelar:hover {
+      background: #f7f2ff;
+    }
+
+    @media (max-width: 850px) {
+      .login-container {
+        grid-template-columns: 1fr;
+      }
+
+      .visual-area {
+        display: none;
+      }
+
+      .login-area {
+        padding: 38px 26px;
+      }
+
+      .logo {
+        margin-bottom: 32px;
+      }
+
+      .login-area h1 {
+        font-size: 30px;
+      }
+
+      .opcoes-login {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .modal-botoes {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="login-container">
+
+    <section class="login-area">
+      <div class="logo">
+        <img src="logo_unioeste.png" alt="Logo da Unioeste">
+      </div>
+
+      <h1>Acesse sua conta</h1>
+
+      <p class="descricao">
+        Entre no ambiente acadêmico para acompanhar avisos, editais,
+        oportunidades e informações importantes da universidade.
+      </p>
+
+      <form onsubmit="entrarPlataforma(event)">
+        <div class="campo">
+          <label for="email">E-mail institucional</label>
+          <input type="email" id="email" placeholder="login@unioeste.br">
+        </div>
+
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" placeholder="Digite sua senha">
+        </div>
+
+        <div class="opcoes-login">
+          <label>
+            <input type="checkbox" id="lembrar">
+            Lembrar acesso
+          </label>
+
+          <a href="#" onclick="abrirRecuperarSenha()">Esqueci minha senha</a>
+        </div>
+
+        <button type="submit" class="btn-login">
+          Entrar na plataforma
+        </button>
+      </form>
+
+      <p class="cadastro">
+        Ainda não tem uma conta?
+        <a onclick="abrirCadastro()">Criar cadastro</a>
+      </p>
+    </section>
+
+    <section class="visual-area">
+      <div class="visual-conteudo">
+        <h2>Vida acadêmica mais simples e conectada</h2>
+        <p>
+          Uma plataforma para centralizar informações importantes,
+          reduzir a perda de prazos e melhorar a comunicação entre
+          universidade e estudantes.
+        </p>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <strong>Editais centralizados</strong>
+          <span>Acompanhe bolsas, estágios, projetos, eventos e oportunidades.</span>
+        </div>
+
+        <div class="card">
+          <strong>Avisos inteligentes</strong>
+          <span>Receba informações relevantes de acordo com seu curso e perfil.</span>
+        </div>
+
+        <div class="card">
+          <strong>Experiência universitária integrada</strong>
+          <span>Menos sistemas espalhados, mais organização para o estudante.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="modal-fundo" id="modalCadastro">
+    <div class="modal">
+      <h2>Criar cadastro</h2>
+      <p>Preencha seus dados para criar sua conta na plataforma.</p>
+
+      <div class="campo">
+        <label for="telefone">Número de Telefone</label>
+        <input type="text" id="telefone" placeholder="DDD + Número">
+      </div>
+
+      <div class="campo">
+        <label for="emailCadastro">E-mail institucional</label>
+        <input type="email" id="emailCadastro" placeholder="login@unioeste.br">
+      </div>
+
+      <div class="campo">
+        <label for="senhaCadastro">Senha</label>
+        <input type="password" id="senhaCadastro" placeholder="Crie uma senha">
+      </div>
+
+      <div class="campo">
+        <label for="confirmarSenhaCadastro">Confirmar senha</label>
+        <input type="password" id="confirmarSenhaCadastro" placeholder="Repita sua senha">
+      </div>
+
+      <div class="modal-botoes">
+        <button class="btn-cancelar" onclick="fecharCadastro()">Cancelar</button>
+        <button class="btn-login" type="button" onclick="enviarCadastro()">Criar conta</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-fundo" id="modalRecuperarSenha">
+    <div class="modal">
+      <h2>Recuperar senha</h2>
+      <p>
+        Informe seu e-mail institucional para receber as instruções de recuperação de senha.
+      </p>
+
+      <div class="campo">
+        <label for="emailRecuperacao">E-mail institucional</label>
+        <input type="email" id="emailRecuperacao" placeholder="seunome@unioeste.br">
+      </div>
+
+      <div class="modal-botoes">
+        <button class="btn-cancelar" onclick="fecharRecuperarSenha()">Cancelar</button>
+        <button class="btn-login" type="button" onclick="enviarRecuperacao()">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  window.onload = function() {
+    const usuarioLogado = localStorage.getItem("usuarioLogado");
+    const perfilConfigurado = localStorage.getItem("perfilConfigurado");
+
+    if (usuarioLogado === "true" && perfilConfigurado === "true") {
+      window.location.href = "home.html#editais";
+    }
+  };
+
+  function abrirCadastro() {
+    document.getElementById("modalCadastro").style.display = "flex";
+  }
+
+  function fecharCadastro() {
+    document.getElementById("modalCadastro").style.display = "none";
+  }
+
+  function abrirRecuperarSenha() {
+    document.getElementById("modalRecuperarSenha").style.display = "flex";
+  }
+
+  function fecharRecuperarSenha() {
+    document.getElementById("modalRecuperarSenha").style.display = "none";
+  }
+
+  function entrarPlataforma(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+
+    if (email === "" || senha === "") {
+      alert("Por favor, preencha o e-mail e a senha.");
+      return;
+    }
+
+    const emailSalvo = localStorage.getItem("usuarioEmail");
+    const perfilConfigurado = localStorage.getItem("perfilConfigurado");
+
+    localStorage.setItem("usuarioLogado", "true");
+
+    if (emailSalvo && emailSalvo !== email) {
+      localStorage.setItem("usuarioEmail", email);
+      localStorage.setItem("perfilConfigurado", "false");
+
+      localStorage.removeItem("perfilAluno");
+      localStorage.removeItem("favoritosAluno");
+
+      window.location.href = "welcome.html";
+      return;
+    }
+
+    localStorage.setItem("usuarioEmail", email);
+
+    if (perfilConfigurado === "true") {
+      window.location.href = "home.html#editais";
+    } else {
+      window.location.href = "welcome.html";
+    }
+  }
+
+  function enviarCadastro() {
+    const telefone = document.getElementById("telefone").value.trim();
+    const email = document.getElementById("emailCadastro").value.trim();
+    const senha = document.getElementById("senhaCadastro").value.trim();
+    const confirmarSenha = document.getElementById("confirmarSenhaCadastro").value.trim();
+
+    if (
+      telefone === "" ||
+      email === "" ||
+      senha === "" ||
+      confirmarSenha === ""
+    ) {
+      alert("Por favor, preencha todos os campos do cadastro.");
+      return;
+    }
+
+    if (senha !== confirmarSenha) {
+      alert("As senhas não coincidem.");
+      return;
+    }
+
+    localStorage.setItem("usuarioLogado", "true");
+    localStorage.setItem("usuarioEmail", email);
+    localStorage.setItem("perfilConfigurado", "false");
+
+    localStorage.removeItem("perfilAluno");
+    localStorage.removeItem("favoritosAluno");
+
+    alert("Cadastro criado com sucesso!");
+    window.location.href = "welcome.html";
+  }
+
+  function enviarRecuperacao() {
+    const email = document.getElementById("emailRecuperacao").value.trim();
+
+    if (email === "") {
+      alert("Por favor, informe seu e-mail institucional.");
+      return;
+    }
+
+    alert("As instruções de recuperação foram enviadas para o e-mail informado.");
+    fecharRecuperarSenha();
+  }
+
+  window.onclick = function(event) {
+    const modalCadastro = document.getElementById("modalCadastro");
+    const modalRecuperarSenha = document.getElementById("modalRecuperarSenha");
+
+    if (event.target === modalCadastro) {
+      fecharCadastro();
+    }
+
+    if (event.target === modalRecuperarSenha) {
+      fecharRecuperarSenha();
+    }
+  };
+</script>
+
+</body>
+</html>

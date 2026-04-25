@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil Acadêmico - Unioeste</title>
+
+  <style>
+    :root {
+      --roxo-escuro: #2d1b4e;
+      --roxo: #5b3f8c;
+      --lilas: #8d78b8;
+      --vinho: #b5426b;
+      --fundo: #f5f2fa;
+      --branco: #ffffff;
+      --texto: #1f1f2e;
+      --cinza: #6b6475;
+      --verde: #2e7d50;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(181, 66, 107, 0.18), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(91, 63, 140, 0.22), transparent 35%),
+        var(--fundo);
+      padding: 24px;
+      color: var(--texto);
+    }
+
+    @keyframes aparecerPagina {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes aparecerDeCima {
+      from {
+        opacity: 0;
+        transform: translateY(-24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes aparecerBloco {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .pagina {
+      width: 100%;
+      max-width: 1150px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(45, 27, 78, 0.22);
+      overflow: hidden;
+      animation: aparecerPagina 0.65s ease-out both;
+    }
+
+    .topo {
+      background:
+        linear-gradient(135deg, rgba(45, 27, 78, 0.98), rgba(91, 63, 140, 0.94)),
+        radial-gradient(circle at right, rgba(181, 66, 107, 0.55), transparent 35%);
+      color: white;
+      padding: 34px 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      animation: aparecerDeCima 0.75s ease-out both;
+      animation-delay: 0.15s;
+    }
+
+    .topo-texto h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .topo-texto p {
+      color: #e8ddff;
+      line-height: 1.5;
+      max-width: 720px;
+    }
+
+    .logo img {
+      max-width: 210px;
+      background: white;
+      padding: 12px 16px;
+      border-radius: 16px;
+    }
+
+    .conteudo {
+      padding: 42px;
+      display: grid;
+      grid-template-columns: 1fr 0.9fr;
+      gap: 34px;
+    }
+
+    .bloco {
+      background: #fbfaff;
+      border: 1px solid #e2dced;
+      border-radius: 22px;
+      padding: 28px;
+      opacity: 0;
+      animation: aparecerBloco 0.65s ease-out both;
+    }
+
+    .bloco:nth-child(1) {
+      animation-delay: 0.25s;
+    }
+
+    .bloco:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+
+    .bloco h2 {
+      color: var(--roxo-escuro);
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .bloco p {
+      color: var(--cinza);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .campo {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .campo label {
+      display: block;
+      color: var(--roxo-escuro);
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .campo input {
+      width: 100%;
+      padding: 15px 16px;
+      border: 1px solid #d8cfea;
+      border-radius: 14px;
+      font-size: 15px;
+      outline: none;
+      background: white;
+      color: var(--texto);
+      transition: 0.2s;
+    }
+
+    .campo input:focus {
+      border-color: var(--roxo);
+      box-shadow: 0 0 0 3px rgba(91, 63, 140, 0.15);
+    }
+
+    .campo-busca {
+      position: relative;
+    }
+
+    .lista-cursos {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #d8cfea;
+      border-radius: 16px;
+      box-shadow: 0 16px 35px rgba(45, 27, 78, 0.18);
+      max-height: 230px;
+      overflow-y: auto;
+      z-index: 30;
+      padding: 8px;
+    }
+
+    .lista-cursos.ativa {
+      display: block;
+      animation: aparecerBloco 0.25s ease-out both;
+    }
+
+    .opcao-curso {
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      color: var(--texto);
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .opcao-curso:hover {
+      background: #f7f2ff;
+      color: var(--roxo-escuro);
+      transform: translateX(2px);
+    }
+
+    .opcao-curso strong {
+      color: var(--vinho);
+    }
+
+    .sem-resultados {
+      padding: 12px 14px;
+      color: var(--cinza);
+      font-size: 14px;
+    }
+
+    .ajuda-campo {
+      display: block;
+      margin-top: 7px;
+      font-size: 12px;
+      color: var(--cinza);
+    }
+
+    .select-custom {
+      position: relative;
+    }
+
+    .select-botao {
+      width: 100%;
+      padding: 15px 48px 15px 16px;
+      border: 1px solid #d8cfea;
+      border-radius: 14px;
+      background:
+        linear-gradient(white, white) padding-box,
+        linear-gradient(135deg, rgba(91, 63, 140, 0.55), rgba(181, 66, 107, 0.35)) border-box;
+      color: var(--texto);
+      font-size: 15px;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.2s;
+      position: relative;
+    }
+
+    .select-botao:hover {
+      border-color: var(--roxo);
+      box-shadow: 0 8px 22px rgba(45, 27, 78, 0.08);
+    }
+
+    .select-botao:focus {
+      outline: none;
+      border-color: var(--roxo);
+      box-shadow: 0 0 0 3px rgba(91, 63, 140, 0.15);
+    }
+
+    .select-botao::after {
+      content: "⌄";
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-55%);
+      color: var(--roxo);
+      font-size: 24px;
+      transition: 0.2s;
+    }
+
+    .select-custom.aberto .select-botao::after {
+      transform: translateY(-45%) rotate(180deg);
+    }
+
+    .select-lista {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #d8cfea;
+      border-radius: 16px;
+      box-shadow: 0 16px 35px rgba(45, 27, 78, 0.18);
+      z-index: 25;
+      padding: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .select-custom.aberto .select-lista {
+      display: block;
+      animation: aparecerBloco 0.25s ease-out both;
+    }
+
+    .select-opcao {
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      color: var(--texto);
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .select-opcao:hover {
+      background: #f7f2ff;
+      color: var(--roxo-escuro);
+      transform: translateX(2px);
+    }
+
+    .select-opcao.selecionado {
+      background: rgba(181, 66, 107, 0.1);
+      color: var(--vinho);
+      font-weight: bold;
+      border: 1px solid rgba(181, 66, 107, 0.2);
+    }
+
+    .placeholder-select {
+      color: #81768f;
+    }
+
+    .grade-interesses {
+      display: grid;
+      gap: 12px;
+    }
+
+    .interesse {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border: 1px solid #e2dced;
+      padding: 14px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: var(--texto);
+      font-weight: 600;
+    }
+
+    .interesse:hover {
+      border-color: var(--roxo);
+      background: #f7f2ff;
+      transform: translateY(-1px);
+    }
+
+    .interesse input {
+      accent-color: var(--vinho);
+      width: 18px;
+      height: 18px;
+    }
+
+    .acoes {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+      opacity: 0;
+      animation: aparecerBloco 0.65s ease-out both;
+      animation-delay: 0.55s;
+    }
+
+    .btn-principal {
+      padding: 16px 24px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo));
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 12px 24px rgba(91, 63, 140, 0.28);
+    }
+
+    .btn-principal:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(91, 63, 140, 0.34);
+    }
+
+    .btn-secundario {
+      padding: 15px 22px;
+      border-radius: 14px;
+      border: 1px solid #d8cfea;
+      background: white;
+      color: var(--roxo-escuro);
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-secundario:hover {
+      background: #f7f2ff;
+    }
+
+    .mensagem {
+      display: none;
+      color: var(--verde);
+      font-weight: bold;
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      body {
+        padding: 16px;
+      }
+
+      .topo {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 28px 24px;
+      }
+
+      .topo-texto h1 {
+        font-size: 27px;
+      }
+
+      .logo img {
+        max-width: 180px;
+      }
+
+      .conteudo {
+        grid-template-columns: 1fr;
+        padding: 24px;
+      }
+
+      .acoes {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-principal,
+      .btn-secundario {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="pagina">
+    <header class="topo">
+      <div class="topo-texto">
+        <h1>Complete seu perfil acadêmico</h1>
+        <p>
+          Essas informações ajudam a plataforma a recomendar editais,
+          eventos, oportunidades, estágios, projetos e avisos mais relevantes
+          para sua trajetória universitária.
+        </p>
+      </div>
+
+      <div class="logo">
+        <img src="logo_unioeste.png" alt="Logo da Unioeste">
+      </div>
+    </header>
+
+    <section class="conteudo">
+      <div class="bloco">
+        <h2>Informações do estudante</h2>
+        <p>Preencha seus dados principais para personalizar sua experiência.</p>
+
+        <div class="campo">
+          <label for="nomeCompleto">Nome completo</label>
+          <input type="text" id="nomeCompleto" placeholder="Digite seu nome completo">
+        </div>
+
+        <div class="campo campo-busca">
+          <label for="curso">Curso</label>
+          <input
+            type="text"
+            id="curso"
+            placeholder="Digite para buscar seu curso"
+            autocomplete="off"
+            oninput="filtrarCursos()"
+            onfocus="abrirListaCursos()"
+          >
+          <div class="lista-cursos" id="listaCursos"></div>
+          <small class="ajuda-campo">Exemplo: digite “computação”, “medicina” ou “engenharia”.</small>
+        </div>
+
+        <div class="campo">
+          <label>Ano letivo</label>
+
+          <div class="select-custom" id="selectAno">
+            <button type="button" class="select-botao placeholder-select" onclick="alternarSelect('selectAno')">
+              Selecione o ano letivo
+            </button>
+
+            <div class="select-lista">
+              <div class="select-opcao" onclick="selecionarOpcao('selectAno', '1º ano')">1º ano</div>
+              <div class="select-opcao" onclick="selecionarOpcao('selectAno', '2º ano')">2º ano</div>
+              <div class="select-opcao" onclick="selecionarOpcao('selectAno', '3º ano')">3º ano</div>
+              <div class="select-opcao" onclick="selecionarOpcao('selectAno', '4º ano')">4º ano</div>
+              <div class="select-opcao" onclick="selecionarOpcao('selectAno', '5º ano')">5º ano</div>
+            </div>
+
+            <input type="hidden" id="anoLetivo">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Campus</label>
+
+          <div class="select-custom" id="selectCampus">
+            <button type="button" class="select-botao placeholder-select" onclick="alternarSelect('selectCampus')">
+              Selecione seu campus
+            </button>
+
+            <div class="select-lista">
+              <div class="select-opcao" onclick="selecionarOpcao('selectCampus', 'Cascavel')">Cascavel</div>
+              <div class="select-opcao" onclick="selecionarOpcao('selectCampus', 'Foz do Iguaçu')">Foz do Iguaçu</div>
+              <div class="select-opcao" onclick="selecionarOpcao('selectCampus', 'Francisco Beltrão')">Francisco Beltrão</div>
+              <div class="select-opcao" onclick="selecionarOpcao('selectCampus', 'Marechal Cândido Rondon')">Marechal Cândido Rondon</div>
+              <div class="select-opcao" onclick="selecionarOpcao('selectCampus', 'Toledo')">Toledo</div>
+            </div>
+
+            <input type="hidden" id="campus">
+          </div>
+        </div>
+      </div>
+
+      <div class="bloco">
+        <h2>Interesses acadêmicos</h2>
+        <p>Escolha os temas que você deseja acompanhar dentro da plataforma.</p>
+
+        <div class="grade-interesses">
+          <label class="interesse">
+            <input type="checkbox" value="Guia do calouro">
+            Guia do calouro
+          </label>
+
+          <label class="interesse">
+            <input type="checkbox" value="Monitoria">
+            Monitoria
+          </label>
+
+          <label class="interesse">
+            <input type="checkbox" value="Iniciação científica">
+            Iniciação científica
+          </label>
+
+          <label class="interesse">
+            <input type="checkbox" value="Edital de bolsas">
+            Edital de bolsas
+          </label>
+
+          <label class="interesse">
+            <input type="checkbox" value="Eventos">
+            Eventos
+          </label>
+
+          <label class="interesse">
+            <input type="checkbox" value="Estágio">
+            Estágio
+          </label>
+
+          <label class="interesse">
+            <input type="checkbox" value="Campus">
+            Campus
+          </label>
+
+          <label class="interesse">
+            <input type="checkbox" value="Edital de monitoria">
+            Edital de monitoria
+          </label>
+
+          <label class="interesse">
+            <input type="checkbox" value="Projetos de professores">
+            Projetos de professores
+          </label>
+        </div>
+      </div>
+
+      <div class="acoes">
+        <button class="btn-secundario" onclick="voltarLogin()">Sair</button>
+
+        <span class="mensagem" id="mensagemPerfil">
+          Perfil salvo com sucesso! Redirecionando...
+        </span>
+
+        <button class="btn-principal" onclick="salvarPerfil()">
+          Salvar perfil e continuar
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    window.onload = function() {
+      const usuarioLogado = localStorage.getItem("usuarioLogado");
+      const perfilConfigurado = localStorage.getItem("perfilConfigurado");
+
+      if (usuarioLogado !== "true") {
+        window.location.href = "index.html";
+        return;
+      }
+
+      if (perfilConfigurado === "true") {
+        window.location.href = "home.html#editais";
+        return;
+      }
+    };
+
+    const cursos = [
+      "Administração",
+      "Ciência da Computação",
+      "Ciências Biológicas - Bacharelado",
+      "Ciências Biológicas - Licenciatura",
+      "Ciências Contábeis",
+      "Ciências Econômicas",
+      "Enfermagem",
+      "Engenharia Agrícola",
+      "Engenharia Civil",
+      "Farmácia",
+      "Fisioterapia",
+      "Letras - Português/Espanhol/Inglês/Italiano",
+      "Matemática",
+      "Medicina",
+      "Odontologia",
+      "Pedagogia"
+    ];
+
+    function normalizarTexto(texto) {
+      return texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function abrirListaCursos() {
+      filtrarCursos();
+      document.getElementById("listaCursos").classList.add("ativa");
+    }
+
+    function fecharListaCursos() {
+      document.getElementById("listaCursos").classList.remove("ativa");
+    }
+
+    function destacarTrecho(texto, busca) {
+      if (busca.trim() === "") {
+        return texto;
+      }
+
+      const textoNormalizado = normalizarTexto(texto);
+      const buscaNormalizada = normalizarTexto(busca);
+      const inicio = textoNormalizado.indexOf(buscaNormalizada);
+
+      if (inicio === -1) {
+        return texto;
+      }
+
+      const fim = inicio + busca.length;
+
+      return (
+        texto.substring(0, inicio) +
+        "<strong>" +
+        texto.substring(inicio, fim) +
+        "</strong>" +
+        texto.substring(fim)
+      );
+    }
+
+    function filtrarCursos() {
+      const input = document.getElementById("curso");
+      const lista = document.getElementById("listaCursos");
+      const busca = input.value;
+
+      const cursosFiltrados = cursos.filter(curso =>
+        normalizarTexto(curso).includes(normalizarTexto(busca))
+      );
+
+      lista.innerHTML = "";
+
+      if (cursosFiltrados.length === 0) {
+        lista.innerHTML = '<div class="sem-resultados">Nenhum curso encontrado.</div>';
+        lista.classList.add("ativa");
+        return;
+      }
+
+      cursosFiltrados.forEach(curso => {
+        const item = document.createElement("div");
+        item.className = "opcao-curso";
+        item.innerHTML = destacarTrecho(curso, busca);
+
+        item.onclick = function() {
+          input.value = curso;
+          fecharListaCursos();
+        };
+
+        lista.appendChild(item);
+      });
+
+      lista.classList.add("ativa");
+    }
+
+    function alternarSelect(id) {
+      const selectAtual = document.getElementById(id);
+      const estavaAberto = selectAtual.classList.contains("aberto");
+
+      document.querySelectorAll(".select-custom").forEach(select => {
+        select.classList.remove("aberto");
+      });
+
+      fecharListaCursos();
+
+      if (!estavaAberto) {
+        selectAtual.classList.add("aberto");
+      }
+    }
+
+    function selecionarOpcao(id, valor) {
+      const select = document.getElementById(id);
+      const botao = select.querySelector(".select-botao");
+      const inputHidden = select.querySelector("input[type='hidden']");
+      const opcoes = select.querySelectorAll(".select-opcao");
+
+      botao.textContent = valor;
+      botao.classList.remove("placeholder-select");
+      inputHidden.value = valor;
+
+      opcoes.forEach(opcao => {
+        opcao.classList.remove("selecionado");
+
+        if (opcao.textContent.trim() === valor) {
+          opcao.classList.add("selecionado");
+        }
+      });
+
+      select.classList.remove("aberto");
+    }
+
+    function salvarPerfil() {
+      const nome = document.getElementById("nomeCompleto").value;
+      const curso = document.getElementById("curso").value;
+      const ano = document.getElementById("anoLetivo").value;
+      const campus = document.getElementById("campus").value;
+      const interessesSelecionados = document.querySelectorAll(".interesse input:checked");
+
+      if (
+        nome.trim() === "" ||
+        curso.trim() === "" ||
+        ano.trim() === "" ||
+        campus.trim() === ""
+      ) {
+        alert("Por favor, preencha nome completo, curso, ano letivo e campus.");
+        return;
+      }
+
+      const cursoExisteNaLista = cursos.some(item =>
+        normalizarTexto(item) === normalizarTexto(curso)
+      );
+
+      if (!cursoExisteNaLista) {
+        alert("Por favor, selecione um curso da lista.");
+        abrirListaCursos();
+        return;
+      }
+
+      if (interessesSelecionados.length === 0) {
+        alert("Selecione pelo menos um interesse acadêmico.");
+        return;
+      }
+
+      const interesses = Array.from(interessesSelecionados).map(item => item.value);
+
+      localStorage.setItem("perfilAluno", JSON.stringify({
+        nome: nome,
+        curso: curso,
+        ano: ano,
+        campus: campus,
+        interesses: interesses
+      }));
+
+      localStorage.setItem("perfilConfigurado", "true");
+
+      document.getElementById("mensagemPerfil").style.display = "inline";
+
+      setTimeout(function() {
+        window.location.href = "home.html#editais";
+      }, 700);
+    }
+
+    function voltarLogin() {
+      localStorage.setItem("usuarioLogado", "false");
+      window.location.href = "index.html";
+    }
+
+    document.addEventListener("click", function(event) {
+      const campoCurso = document.querySelector(".campo-busca");
+      const clicouEmSelect = event.target.closest(".select-custom");
+
+      if (!campoCurso.contains(event.target)) {
+        fecharListaCursos();
+      }
+
+      if (!clicouEmSelect) {
+        document.querySelectorAll(".select-custom").forEach(select => {
+          select.classList.remove("aberto");
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

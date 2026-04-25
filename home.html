@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal Acadêmico - Unioeste</title>
+
+  <style>
+    :root {
+      --roxo-escuro: #2d1b4e;
+      --roxo: #5b3f8c;
+      --lilas: #8d78b8;
+      --vinho: #b5426b;
+      --fundo: #f5f2fa;
+      --branco: #ffffff;
+      --texto: #1f1f2e;
+      --cinza: #6b6475;
+      --verde: #2e7d50;
+      --amarelo: #f4b740;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(181, 66, 107, 0.16), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(91, 63, 140, 0.20), transparent 35%),
+        var(--fundo);
+      color: var(--texto);
+    }
+
+    @keyframes aparecerPagina {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes aparecerBloco {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      animation: aparecerPagina 0.55s ease-out both;
+    }
+
+    .sidebar {
+      background:
+        linear-gradient(180deg, rgba(45, 27, 78, 0.98), rgba(91, 63, 140, 0.96)),
+        radial-gradient(circle at top, rgba(181, 66, 107, 0.5), transparent 40%);
+      color: white;
+      padding: 28px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100vh;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+    }
+
+    .logo-box {
+      background: white;
+      border-radius: 18px;
+      padding: 12px;
+      margin-bottom: 26px;
+    }
+
+    .logo-box img {
+      width: 100%;
+      display: block;
+    }
+
+    .usuario-mini {
+      margin-bottom: 28px;
+    }
+
+    .usuario-mini h2 {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    .usuario-mini p {
+      color: #e8ddff;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .menu {
+      display: grid;
+      gap: 12px;
+    }
+
+    .menu button {
+      width: 100%;
+      border: none;
+      background: rgba(255, 255, 255, 0.10);
+      color: white;
+      padding: 14px 16px;
+      border-radius: 14px;
+      text-align: left;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu button:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: translateX(3px);
+    }
+
+    .menu button.ativo {
+      background: white;
+      color: var(--roxo-escuro);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+    }
+
+    .sidebar-footer {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-sair {
+      width: 70%;
+      max-width: 170px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: transparent;
+      color: white;
+      padding: 13px 14px;
+      border-radius: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+    }
+
+    .btn-sair:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .conteudo {
+      padding: 34px;
+    }
+
+    .topbar {
+      background: white;
+      border-radius: 24px;
+      padding: 26px 30px;
+      box-shadow: 0 18px 45px rgba(45, 27, 78, 0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+
+    .topbar h1 {
+      color: var(--roxo-escuro);
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .topbar p {
+      color: var(--cinza);
+      line-height: 1.5;
+    }
+
+    .busca {
+      min-width: 270px;
+    }
+
+    .busca input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #d8cfea;
+      border-radius: 14px;
+      outline: none;
+      font-size: 14px;
+      background: #fbfaff;
+    }
+
+    .busca input:focus {
+      border-color: var(--roxo);
+      box-shadow: 0 0 0 3px rgba(91, 63, 140, 0.15);
+      background: white;
+    }
+
+    .secao {
+      display: none;
+      animation: aparecerBloco 0.45s ease-out both;
+    }
+
+    .secao.ativa {
+      display: block;
+    }
+
+    .grid-dashboard {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e2dced;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 16px 38px rgba(45, 27, 78, 0.08);
+    }
+
+    .card h2 {
+      color: var(--roxo-escuro);
+      margin-bottom: 10px;
+      font-size: 23px;
+    }
+
+    .card p {
+      color: var(--cinza);
+      line-height: 1.5;
+    }
+
+    .lista-editais,
+    .lista-eventos,
+    .lista-projetos,
+    .lista-favoritos,
+    .lista-perfil {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .edital,
+    .evento,
+    .projeto,
+    .favorito,
+    .item-perfil {
+      border: 1px solid #e2dced;
+      background: #fbfaff;
+      border-radius: 18px;
+      padding: 18px;
+      transition: 0.2s;
+    }
+
+    .edital:hover,
+    .evento:hover,
+    .projeto:hover,
+    .favorito:hover,
+    .item-perfil:hover {
+      border-color: var(--roxo);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(45, 27, 78, 0.09);
+    }
+
+    .linha-topo {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .edital h3,
+    .evento h3,
+    .projeto h3,
+    .favorito h3,
+    .item-perfil h3 {
+      color: var(--roxo-escuro);
+      font-size: 18px;
+    }
+
+    .favorito-vazio {
+      border: 1px dashed #d8cfea;
+      background: #fbfaff;
+      border-radius: 18px;
+      padding: 28px;
+      text-align: center;
+    }
+
+    .favorito-vazio h3 {
+      color: var(--roxo-escuro);
+      margin-bottom: 8px;
+    }
+
+    .favorito-vazio p {
+      color: var(--cinza);
+    }
+
+    .tag {
+      display: inline-block;
+      background: rgba(181, 66, 107, 0.1);
+      color: var(--vinho);
+      border: 1px solid rgba(181, 66, 107, 0.22);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .tag.verde {
+      background: rgba(46, 125, 80, 0.1);
+      color: var(--verde);
+      border-color: rgba(46, 125, 80, 0.22);
+    }
+
+    .tag.amarelo {
+      background: rgba(244, 183, 64, 0.16);
+      color: #8a5b00;
+      border-color: rgba(244, 183, 64, 0.32);
+    }
+
+    .prazo {
+      color: var(--vinho);
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .acoes-card {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-pequeno {
+      border: none;
+      background: var(--roxo);
+      color: white;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 13px;
+    }
+
+    .btn-pequeno:hover {
+      background: var(--roxo-escuro);
+      transform: translateY(-1px);
+    }
+
+    .btn-claro {
+      border: 1px solid #d8cfea;
+      background: white;
+      color: var(--roxo-escuro);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 13px;
+    }
+
+    .btn-claro:hover {
+      background: #f7f2ff;
+    }
+
+    .btn-remover {
+      border: 1px solid rgba(181, 66, 107, 0.35);
+      background: white;
+      color: var(--vinho);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 13px;
+    }
+
+    .btn-remover:hover {
+      background: rgba(181, 66, 107, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .painel-lateral {
+      display: grid;
+      gap: 18px;
+    }
+
+    .dica {
+      background:
+        linear-gradient(135deg, rgba(45, 27, 78, 0.97), rgba(91, 63, 140, 0.95)),
+        radial-gradient(circle at right, rgba(181, 66, 107, 0.5), transparent 38%);
+      color: white;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 16px 38px rgba(45, 27, 78, 0.16);
+    }
+
+    .dica h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .dica p {
+      color: #e8ddff;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .dica ul {
+      padding-left: 18px;
+      color: #f3eefe;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .estatisticas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid #e2dced;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 14px 30px rgba(45, 27, 78, 0.07);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--roxo-escuro);
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+
+    .stat span {
+      color: var(--cinza);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .perfil-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .interesses-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        min-height: auto;
+        height: auto;
+        position: relative;
+        overflow-y: visible;
+      }
+
+      .logo-box {
+        max-width: 230px;
+      }
+
+      .conteudo {
+        padding: 22px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .busca {
+        width: 100%;
+        min-width: unset;
+      }
+
+      .grid-dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .estatisticas {
+        grid-template-columns: 1fr;
+      }
+
+      .perfil-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .btn-sair {
+        width: 100%;
+        max-width: 230px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="app">
+    <aside class="sidebar">
+      <div>
+        <div class="logo-box">
+          <img src="logo_unioeste.png" alt="Logo da Unioeste">
+        </div>
+
+        <div class="usuario-mini">
+          <h2>Portal Acadêmico</h2>
+          <p>Informações, editais e oportunidades reunidas em um só lugar.</p>
+        </div>
+
+        <nav class="menu">
+          <button id="btnPerfil" onclick="mostrarSecao('perfil')">
+            👤 Perfil
+          </button>
+
+          <button id="btnEditais" onclick="mostrarSecao('editais')">
+            📄 Editais
+          </button>
+
+          <button id="btnEventos" onclick="mostrarSecao('eventos')">
+            📅 Eventos próximos
+          </button>
+
+          <button id="btnProjetos" onclick="mostrarSecao('projetos')">
+            🧪 Projetos de professores
+          </button>
+
+          <button id="btnFavoritos" onclick="mostrarSecao('favoritos')">
+            ⭐ Favoritos
+          </button>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="btn-sair" onclick="sair()">
+          Sair
+        </button>
+      </div>
+    </aside>
+
+    <section class="conteudo">
+      <header class="topbar">
+        <div>
+          <h1 id="tituloSecao">Editais</h1>
+          <p id="descricaoSecao">
+            Acompanhe oportunidades abertas e prazos importantes da universidade.
+          </p>
+        </div>
+
+        <div class="busca">
+          <input type="text" id="campoBusca" placeholder="Buscar na seção atual..." oninput="filtrarConteudo()">
+        </div>
+      </header>
+
+      <section class="secao" id="secaoPerfil">
+        <div class="card">
+          <h2>Seu perfil acadêmico</h2>
+          <p>
+            Estas informações ajudam a plataforma a sugerir editais, eventos e projetos mais relevantes.
+          </p>
+
+          <div class="lista-perfil perfil-grid">
+            <div class="item-perfil">
+              <h3>Nome completo</h3>
+              <p id="perfilNome">Não informado</p>
+            </div>
+
+            <div class="item-perfil">
+              <h3>Curso</h3>
+              <p id="perfilCurso">Não informado</p>
+            </div>
+
+            <div class="item-perfil">
+              <h3>Ano letivo</h3>
+              <p id="perfilAno">Não informado</p>
+            </div>
+
+            <div class="item-perfil">
+              <h3>Campus</h3>
+              <p id="perfilCampus">Não informado</p>
+            </div>
+          </div>
+
+          <div class="item-perfil" style="margin-top: 18px;">
+            <h3>Interesses cadastrados</h3>
+            <div class="interesses-tags" id="perfilInteresses"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="secao" id="secaoEditais">
+        <div class="estatisticas">
+          <div class="stat">
+            <strong>6</strong>
+            <span>Editais encontrados para seu perfil</span>
+          </div>
+
+          <div class="stat">
+            <strong>3</strong>
+            <span>Prazos encerrando em breve</span>
+          </div>
+
+          <div class="stat">
+            <strong>2</strong>
+            <span>Oportunidades recomendadas para calouros</span>
+          </div>
+        </div>
+
+        <div class="grid-dashboard">
+          <div class="card">
+            <h2>Editais recomendados</h2>
+            <p>
+              Aqui aparecem oportunidades filtradas conforme seu curso, campus, ano letivo e interesses.
+            </p>
+
+            <div class="lista-editais">
+              <article class="edital item-buscavel">
+                <div class="linha-topo">
+                  <h3>Edital de Monitoria para disciplinas introdutórias</h3>
+                  <span class="tag verde">Recomendado</span>
+                </div>
+                <p>
+                  Oportunidade para acompanhar monitorias em disciplinas básicas e entender como funciona o programa.
+                </p>
+                <p class="prazo">Prazo: 12/05/2026</p>
+                <div class="acoes-card">
+                  <button class="btn-pequeno" onclick="abrirEditalUnioeste()">Ver detalhes</button>
+                  <button
+                    class="btn-claro"
+                    onclick="favoritarItem(
+                      'edital-monitoria',
+                      'Edital de Monitoria para disciplinas introdutórias',
+                      'Edital',
+                      'Oportunidade para acompanhar monitorias em disciplinas básicas e entender como funciona o programa.',
+                      'Prazo: 12/05/2026',
+                      'edital'
+                    )"
+                  >
+                    Favoritar
+                  </button>
+                </div>
+              </article>
+
+              <article class="edital item-buscavel">
+                <div class="linha-topo">
+                  <h3>Bolsa de Iniciação Científica para estudantes iniciantes</h3>
+                  <span class="tag">Pesquisa</span>
+                </div>
+                <p>
+                  Projeto voltado a estudantes que desejam conhecer pesquisa acadêmica com orientação de professores.
+                </p>
+                <p class="prazo">Prazo: 18/05/2026</p>
+                <div class="acoes-card">
+                  <button class="btn-pequeno" onclick="abrirEditalUnioeste()">Ver detalhes</button>
+                  <button
+                    class="btn-claro"
+                    onclick="favoritarItem(
+                      'bolsa-ic-iniciantes',
+                      'Bolsa de Iniciação Científica para estudantes iniciantes',
+                      'Pesquisa',
+                      'Projeto voltado a estudantes que desejam conhecer pesquisa acadêmica com orientação de professores.',
+                      'Prazo: 18/05/2026',
+                      'edital'
+                    )"
+                  >
+                    Favoritar
+                  </button>
+                </div>
+              </article>
+
+              <article class="edital item-buscavel">
+                <div class="linha-topo">
+                  <h3>Edital de auxílio permanência estudantil</h3>
+                  <span class="tag amarelo">Bolsa</span>
+                </div>
+                <p>
+                  Auxílio destinado a estudantes que precisam de apoio para permanência na universidade.
+                </p>
+                <p class="prazo">Prazo: 22/05/2026</p>
+                <div class="acoes-card">
+                  <button class="btn-pequeno" onclick="abrirEditalUnioeste()">Ver detalhes</button>
+                  <button
+                    class="btn-claro"
+                    onclick="favoritarItem(
+                      'auxilio-permanencia',
+                      'Edital de auxílio permanência estudantil',
+                      'Bolsa',
+                      'Auxílio destinado a estudantes que precisam de apoio para permanência na universidade.',
+                      'Prazo: 22/05/2026',
+                      'edital'
+                    )"
+                  >
+                    Favoritar
+                  </button>
+                </div>
+              </article>
+
+              <article class="edital item-buscavel">
+                <div class="linha-topo">
+                  <h3>Seleção para projeto de extensão no campus</h3>
+                  <span class="tag">Extensão</span>
+                </div>
+                <p>
+                  Projeto com participação de estudantes em ações junto à comunidade externa.
+                </p>
+                <p class="prazo">Prazo: 27/05/2026</p>
+                <div class="acoes-card">
+                  <button class="btn-pequeno" onclick="abrirEditalUnioeste()">Ver detalhes</button>
+                  <button
+                    class="btn-claro"
+                    onclick="favoritarItem(
+                      'projeto-extensao-campus',
+                      'Seleção para projeto de extensão no campus',
+                      'Extensão',
+                      'Projeto com participação de estudantes em ações junto à comunidade externa.',
+                      'Prazo: 27/05/2026',
+                      'edital'
+                    )"
+                  >
+                    Favoritar
+                  </button>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <aside class="painel-lateral">
+            <div class="dica">
+              <h2>Guia rápido do calouro</h2>
+              <p>
+                Alguns editais podem parecer confusos no começo. A plataforma pode te ajudar a entender por onde começar.
+              </p>
+              <ul>
+                <li>Monitoria: apoio em disciplinas.</li>
+                <li>Iniciação científica: pesquisa com professores.</li>
+                <li>Extensão: projetos com impacto social.</li>
+                <li>Bolsas: apoio financeiro ou acadêmico.</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h2>Prazos importantes</h2>
+              <p>Fique atento aos editais que encerram nos próximos dias.</p>
+
+              <div class="lista-editais">
+                <div class="edital item-buscavel">
+                  <h3>Monitoria</h3>
+                  <p class="prazo">Fecha em 5 dias</p>
+                </div>
+
+                <div class="edital item-buscavel">
+                  <h3>Auxílio permanência</h3>
+                  <p class="prazo">Fecha em 10 dias</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="secao" id="secaoEventos">
+        <div class="card">
+          <h2>Eventos próximos</h2>
+          <p>
+            Acompanhe palestras, semanas acadêmicas, oficinas e atividades do campus.
+          </p>
+
+          <div class="lista-eventos">
+            <article class="evento item-buscavel">
+              <div class="linha-topo">
+                <h3>Semana Acadêmica de Computação</h3>
+                <span class="tag">Evento</span>
+              </div>
+              <p>Palestras, minicursos e atividades para estudantes da área de tecnologia.</p>
+              <p class="prazo">Data: 06/06/2026</p>
+
+              <div class="acoes-card">
+                <button class="btn-pequeno" onclick="abrirDetalhesEvento()">Ver detalhes</button>
+                <button
+                  class="btn-claro"
+                  onclick="favoritarItem(
+                    'evento-semana-computacao',
+                    'Semana Acadêmica de Computação',
+                    'Evento',
+                    'Palestras, minicursos e atividades para estudantes da área de tecnologia.',
+                    'Data: 06/06/2026',
+                    'evento'
+                  )"
+                >
+                  Favoritar
+                </button>
+              </div>
+            </article>
+
+            <article class="evento item-buscavel">
+              <div class="linha-topo">
+                <h3>Oficina: como ler editais universitários</h3>
+                <span class="tag verde">Calouros</span>
+              </div>
+              <p>Atividade introdutória para estudantes que ainda não sabem como acompanhar oportunidades.</p>
+              <p class="prazo">Data: 10/06/2026</p>
+
+              <div class="acoes-card">
+                <button class="btn-pequeno" onclick="abrirDetalhesEvento()">Ver detalhes</button>
+                <button
+                  class="btn-claro"
+                  onclick="favoritarItem(
+                    'evento-oficina-editais',
+                    'Oficina: como ler editais universitários',
+                    'Evento',
+                    'Atividade introdutória para estudantes que ainda não sabem como acompanhar oportunidades.',
+                    'Data: 10/06/2026',
+                    'evento'
+                  )"
+                >
+                  Favoritar
+                </button>
+              </div>
+            </article>
+
+            <article class="evento item-buscavel">
+              <div class="linha-topo">
+                <h3>Feira de Estágios e Carreiras</h3>
+                <span class="tag amarelo">Estágio</span>
+              </div>
+              <p>Evento para contato com empresas, laboratórios e oportunidades profissionais.</p>
+              <p class="prazo">Data: 18/06/2026</p>
+
+              <div class="acoes-card">
+                <button class="btn-pequeno" onclick="abrirDetalhesEvento()">Ver detalhes</button>
+                <button
+                  class="btn-claro"
+                  onclick="favoritarItem(
+                    'evento-feira-estagios',
+                    'Feira de Estágios e Carreiras',
+                    'Evento',
+                    'Evento para contato com empresas, laboratórios e oportunidades profissionais.',
+                    'Data: 18/06/2026',
+                    'evento'
+                  )"
+                >
+                  Favoritar
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="secao" id="secaoProjetos">
+        <div class="card">
+          <h2>Projetos de professores</h2>
+          <p>
+            Conheça projetos de pesquisa, ensino e extensão que podem aceitar estudantes.
+          </p>
+
+          <div class="lista-projetos">
+            <article class="projeto item-buscavel">
+              <div class="linha-topo">
+                <h3>Projeto de pesquisa em Inteligência Artificial aplicada</h3>
+                <span class="tag">Pesquisa</span>
+              </div>
+              <p>
+                Projeto voltado ao uso de IA para análise de dados e apoio à tomada de decisão.
+              </p>
+              <div class="acoes-card">
+                <button
+                  class="btn-pequeno"
+                  onclick="favoritarItem(
+                    'projeto-ia-aplicada',
+                    'Projeto de pesquisa em Inteligência Artificial aplicada',
+                    'Pesquisa',
+                    'Projeto voltado ao uso de IA para análise de dados e apoio à tomada de decisão.',
+                    'Projeto de professor',
+                    'projeto'
+                  )"
+                >
+                  Favoritar
+                </button>
+
+                <button class="btn-claro" onclick="abrirProfessorResponsavel()">
+                  Ver professor responsável
+                </button>
+              </div>
+            </article>
+
+            <article class="projeto item-buscavel">
+              <div class="linha-topo">
+                <h3>Projeto de extensão em inclusão digital</h3>
+                <span class="tag verde">Extensão</span>
+              </div>
+              <p>
+                Ações para aproximar tecnologia da comunidade e promover capacitação básica.
+              </p>
+              <div class="acoes-card">
+                <button
+                  class="btn-pequeno"
+                  onclick="favoritarItem(
+                    'projeto-inclusao-digital',
+                    'Projeto de extensão em inclusão digital',
+                    'Extensão',
+                    'Ações para aproximar tecnologia da comunidade e promover capacitação básica.',
+                    'Projeto de professor',
+                    'projeto'
+                  )"
+                >
+                  Favoritar
+                </button>
+
+                <button class="btn-claro" onclick="abrirProfessorResponsavel()">
+                  Ver professor responsável
+                </button>
+              </div>
+            </article>
+
+            <article class="projeto item-buscavel">
+              <div class="linha-topo">
+                <h3>Grupo de estudos em desenvolvimento de sistemas</h3>
+                <span class="tag amarelo">Ensino</span>
+              </div>
+              <p>
+                Grupo para estudantes interessados em programação, projetos web e engenharia de software.
+              </p>
+              <div class="acoes-card">
+                <button
+                  class="btn-pequeno"
+                  onclick="favoritarItem(
+                    'projeto-desenvolvimento-sistemas',
+                    'Grupo de estudos em desenvolvimento de sistemas',
+                    'Ensino',
+                    'Grupo para estudantes interessados em programação, projetos web e engenharia de software.',
+                    'Projeto de professor',
+                    'projeto'
+                  )"
+                >
+                  Favoritar
+                </button>
+
+                <button class="btn-claro" onclick="abrirProfessorResponsavel()">
+                  Ver professor responsável
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="secao" id="secaoFavoritos">
+        <div class="card">
+          <h2>Favoritos</h2>
+          <p>
+            Aqui ficam os editais, eventos, projetos e oportunidades que você salvou para consultar depois.
+          </p>
+
+          <div class="lista-favoritos" id="listaFavoritos">
+            <div class="favorito-vazio">
+              <h3>Nenhum favorito salvo ainda</h3>
+              <p>Clique em “Favoritar” em algum edital, evento ou projeto para ele aparecer aqui.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const descricoes = {
+      perfil: {
+        titulo: "Perfil",
+        descricao: "Veja suas informações acadêmicas e interesses cadastrados."
+      },
+      editais: {
+        titulo: "Editais",
+        descricao: "Acompanhe oportunidades abertas e prazos importantes da universidade."
+      },
+      eventos: {
+        titulo: "Eventos próximos",
+        descricao: "Confira atividades acadêmicas, oficinas, palestras e eventos do campus."
+      },
+      projetos: {
+        titulo: "Projetos de professores",
+        descricao: "Conheça projetos de pesquisa, ensino e extensão abertos para estudantes."
+      },
+      favoritos: {
+        titulo: "Favoritos",
+        descricao: "Consulte os editais, eventos, projetos e oportunidades que você salvou para ver depois."
+      }
+    };
+
+    function abrirEditalUnioeste() {
+      window.open(
+        "https://www.unioeste.br/portal/arq/files/PROGRAD/Edital_082-2025_-_Sele%C3%A7%C3%A3o_de_Monitores_-_Disciplinas_-_2025.pdf",
+        "_blank"
+      );
+    }
+
+    function abrirDetalhesEvento() {
+      window.open(
+        "https://www.unioeste.br/portal/central-de-noticias",
+        "_blank"
+      );
+    }
+
+    function abrirProfessorResponsavel() {
+      window.open(
+        "http://lattes.cnpq.br/7323720653064187",
+        "_blank"
+      );
+    }
+
+    function mostrarSecao(secao) {
+      document.querySelectorAll(".secao").forEach(item => {
+        item.classList.remove("ativa");
+      });
+
+      document.querySelectorAll(".menu button").forEach(botao => {
+        botao.classList.remove("ativo");
+      });
+
+      document.getElementById("secao" + capitalizar(secao)).classList.add("ativa");
+      document.getElementById("btn" + capitalizar(secao)).classList.add("ativo");
+
+      document.getElementById("tituloSecao").textContent = descricoes[secao].titulo;
+      document.getElementById("descricaoSecao").textContent = descricoes[secao].descricao;
+
+      document.getElementById("campoBusca").value = "";
+      limparFiltro();
+
+      if (secao === "favoritos") {
+        carregarFavoritos();
+      }
+
+      window.location.hash = secao;
+    }
+
+    function capitalizar(texto) {
+      return texto.charAt(0).toUpperCase() + texto.slice(1);
+    }
+
+    function filtrarConteudo() {
+      const busca = document.getElementById("campoBusca").value.toLowerCase();
+      const secaoAtiva = document.querySelector(".secao.ativa");
+      const itens = secaoAtiva.querySelectorAll(".item-buscavel");
+
+      itens.forEach(item => {
+        const texto = item.textContent.toLowerCase();
+
+        if (texto.includes(busca)) {
+          item.style.display = "block";
+        } else {
+          item.style.display = "none";
+        }
+      });
+    }
+
+    function limparFiltro() {
+      document.querySelectorAll(".item-buscavel").forEach(item => {
+        item.style.display = "block";
+      });
+    }
+
+    function carregarPerfil() {
+      const perfilSalvo = localStorage.getItem("perfilAluno");
+
+      if (!perfilSalvo) {
+        return;
+      }
+
+      const perfil = JSON.parse(perfilSalvo);
+
+      document.getElementById("perfilNome").textContent = perfil.nome || "Não informado";
+      document.getElementById("perfilCurso").textContent = perfil.curso || "Não informado";
+      document.getElementById("perfilAno").textContent = perfil.ano || "Não informado";
+      document.getElementById("perfilCampus").textContent = perfil.campus || "Não informado";
+
+      const container = document.getElementById("perfilInteresses");
+      container.innerHTML = "";
+
+      if (perfil.interesses && perfil.interesses.length > 0) {
+        perfil.interesses.forEach(interesse => {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = interesse;
+          container.appendChild(tag);
+        });
+      } else {
+        container.innerHTML = "<p>Nenhum interesse cadastrado.</p>";
+      }
+    }
+
+    function obterFavoritos() {
+      const favoritosSalvos = localStorage.getItem("favoritosAluno");
+
+      if (!favoritosSalvos) {
+        return [];
+      }
+
+      return JSON.parse(favoritosSalvos);
+    }
+
+    function salvarFavoritos(favoritos) {
+      localStorage.setItem("favoritosAluno", JSON.stringify(favoritos));
+    }
+
+    function favoritarItem(id, titulo, tipo, descricao, prazo, categoria) {
+      const favoritos = obterFavoritos();
+      const jaExiste = favoritos.some(item => item.id === id);
+
+      if (jaExiste) {
+        alert("Esse item já está nos seus favoritos.");
+        return;
+      }
+
+      favoritos.push({
+        id: id,
+        titulo: titulo,
+        tipo: tipo,
+        descricao: descricao,
+        prazo: prazo,
+        categoria: categoria
+      });
+
+      salvarFavoritos(favoritos);
+      carregarFavoritos();
+
+      alert("Item adicionado aos favoritos!");
+    }
+
+    function removerFavorito(id) {
+      const favoritos = obterFavoritos().filter(item => item.id !== id);
+
+      salvarFavoritos(favoritos);
+      carregarFavoritos();
+    }
+
+    function abrirDetalhesFavorito(categoria) {
+      if (categoria === "evento") {
+        abrirDetalhesEvento();
+        return;
+      }
+
+      if (categoria === "projeto") {
+        abrirProfessorResponsavel();
+        return;
+      }
+
+      abrirEditalUnioeste();
+    }
+
+    function carregarFavoritos() {
+      const container = document.getElementById("listaFavoritos");
+
+      if (!container) {
+        return;
+      }
+
+      const favoritos = obterFavoritos();
+
+      container.innerHTML = "";
+
+      if (favoritos.length === 0) {
+        container.innerHTML = `
+          <div class="favorito-vazio">
+            <h3>Nenhum favorito salvo ainda</h3>
+            <p>Clique em “Favoritar” em algum edital, evento ou projeto para ele aparecer aqui.</p>
+          </div>
+        `;
+        return;
+      }
+
+      favoritos.forEach(item => {
+        const favorito = document.createElement("article");
+        favorito.className = "favorito item-buscavel";
+
+        favorito.innerHTML = `
+          <div class="linha-topo">
+            <h3>${item.titulo}</h3>
+            <span class="tag">${item.tipo}</span>
+          </div>
+
+          <p>${item.descricao}</p>
+          <p class="prazo">${item.prazo}</p>
+
+          <div class="acoes-card">
+            <button class="btn-pequeno" onclick="abrirDetalhesFavorito('${item.categoria || "edital"}')">
+              Ver detalhes
+            </button>
+            <button class="btn-remover" onclick="removerFavorito('${item.id}')">Remover</button>
+          </div>
+        `;
+
+        container.appendChild(favorito);
+      });
+    }
+
+    function sair() {
+      localStorage.setItem("usuarioLogado", "false");
+      window.location.href = "index.html";
+    }
+
+    window.onload = function() {
+      const usuarioLogado = localStorage.getItem("usuarioLogado");
+      const perfilConfigurado = localStorage.getItem("perfilConfigurado");
+
+      if (usuarioLogado !== "true") {
+        window.location.href = "index.html";
+        return;
+      }
+
+      if (perfilConfigurado !== "true") {
+        window.location.href = "welcome.html";
+        return;
+      }
+
+      carregarPerfil();
+      carregarFavoritos();
+
+      const hash = window.location.hash.replace("#", "");
+
+      if (
+        hash === "perfil" ||
+        hash === "editais" ||
+        hash === "eventos" ||
+        hash === "projetos" ||
+        hash === "favoritos"
+      ) {
+        mostrarSecao(hash);
+      } else {
+        mostrarSecao("editais");
+      }
+    };
+  </script>
+
+</body>
+</html>
